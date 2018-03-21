@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+class LetonInStack
+{
+public:
+	LetonInStack()
+	{
+		cout << "LeTonInStack()" << endl;
+	}
+
+	~LetonInStack()
+	{
+		cout << "~LetonInStack()" << endl;
+	}
+
+private:
+	void* operator new(size_t)//重载new
+	{}
+
+	void operator delete(void*)//重载delete
+	{}
+};
+
+class LetonInHeap
+{
+public:
+	LetonInHeap()
+	{
+		cout << "LetonInHeap()" << endl;
+	}
+
+private:
+	~LetonInHeap()
+	{
+		cout << "~LetonInHeap()" << endl;
+	}
+};
+
+int main()
+{
+	LetonInStack lts;
+	//LetonInStack lts1 = new LetonInStack();
+	
+	return 0;
+}
