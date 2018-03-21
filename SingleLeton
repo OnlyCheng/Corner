@@ -1,0 +1,41 @@
+//饿汉模式
+class SingleLeton
+{
+public:
+	static SingleLeton* GetInstance()
+	{
+		return pInstance;
+	}
+private:
+	SingleLeton()//构造函数
+	{
+		cout << "SingleLeton()" << endl;
+	}
+	static SingleLeton* pInstance;
+};
+
+//类外初始化类的静态成员变量，使其指向一个类对象
+SingleLeton* SingleLeton::pInstance = new SingleLeton();
+
+//懒汉模式
+class SingleLeton
+{
+public:
+	static SingleLeton* GetInstance()
+	{
+		if (pInstance == NULL)//保证第一次构造成功
+		{
+			pInstance = new SingleClass();
+		}
+		return pInstance;
+	}
+
+private:
+	static SingleLeton* pInstance;//创建一个类类型指针的静态变量
+	SingleLeton()//构造函数
+	{
+		cout << "SingleLeton()" << endl;
+	}
+};
+
+SingleLeton* SingleLeton::pInstance = NULL;//类外初始化类的静态成员
