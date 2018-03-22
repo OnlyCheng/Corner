@@ -1,0 +1,57 @@
+#include <iostream>
+using namespace std;
+#include <cassert>
+#include <cstring>
+#include <string>
+
+int Distence(char* S, char* T)
+{
+	assert(NULL != S);
+	assert(NULL != T);
+
+	int lenS = strlen(S);
+	int lenT = strlen(T);
+
+	if (lenS < lenT)
+		return -1;
+
+	int count = 0;
+	while (*T)
+	{
+		if(*S++ != *T++)
+			count++;
+	}
+	return count;
+}
+
+int SumDis(string S, string T)
+{
+	int lenS = S.length();
+	int lenT = T.length();
+
+	int len = lenS - lenT + 1;
+	const char*pS = S.c_str();
+	char* pT = new char[lenT + 1];
+
+	int sum = 0;
+	for (int i = 0; i < len; i++)
+	{
+		strncpy(pT, (char*)pS + i, lenT);
+		pT[lenT] = '\0';
+		sum += Distence(pT, (char*)T.c_str());
+	}
+
+	delete[] pT;
+	return sum;
+}
+
+int main()
+{
+	string S, T;
+	cin >> S;
+	cin >> T;
+	cout << SumDis(S, T) << endl;
+	return 0;
+}
+
+
