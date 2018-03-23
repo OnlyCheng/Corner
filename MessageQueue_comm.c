@@ -1,6 +1,6 @@
 #include "comm.h"
 
-int Creat(int flag);
+static int Creat(int flag)
 {
 	key_t key = ftok(PATHNAME,PROJ_ID);
 	if(key < 0)
@@ -20,7 +20,7 @@ int Creat(int flag);
 
 int CreateMsgQueue()
 {
-	return Creat(IPC_CREAT|IPC_EXCL);
+	return Creat(IPC_CREAT|IPC_EXCL|0777);
 }
 
 int GetMsgQueue()
@@ -45,7 +45,7 @@ int SendMsg(int msg_id,int sendtype,char* massege)
 	mymsg.mtype = sendtype;
 	strcpy(mymsg.mtext,massege);
 
-	if(msgsnd(msg_id,(void*)&mysmg,sizeof(mymsg.mtext),0) < 0)
+	if(msgsnd(msg_id,(void*)&mymsg,sizeof(mymsg.mtext),0) < 0)
 	{
 		perror("msgsnd");
 		return -1;
@@ -56,7 +56,7 @@ int SendMsg(int msg_id,int sendtype,char* massege)
 int RecvMsg(int msg_id,int recvtype,char out[])
 {
 	struct MyMsg mymsg;
-	if(msgrcv(msg_id,(void*)&mymsg,sizeof(mymsg.mtest),recvtype,0) < 0)
+	if(msgrcv(msg_id,(void*)&mymsg,sizeof(mymsg.mtext),recvtype,0) < 0)
 	{
 		perror("msgrcv");
 		return -1;
