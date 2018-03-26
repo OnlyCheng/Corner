@@ -15,13 +15,13 @@ int main()
 		{
 			buf[s-1] = 0;
 			SendMsg(msg_id,CLIENT_TYPE,buf);
-			printf("OK,pelase waiting..\n");
+			if(strcasecmp("quit",buf) == 0)
+				break;
+			printf("please waiting..\n");
 		}
-
 		RecvMsg(msg_id,SERVER_TYPE,buf);
-		printf("server said: %s\n",buf);
-
-		if(strcasecmp("quit",buf))
+		printf("##server said:## %s\n",buf);
+		if(strcasecmp("quit",buf) == 0)
 			break;
 	}
 
