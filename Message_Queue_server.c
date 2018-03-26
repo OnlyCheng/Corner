@@ -8,10 +8,10 @@ int main()
 	while(1)
 	{
 		RecvMsg(msg_id,CLIENT_TYPE,buf);
-		printf("client said: %s\n",buf);
+		printf("##client said:## %s\n",buf);
 
-		//if(strcasecmp("quit",buf))
-		//	break;
+		if(strcasecmp("quit",buf) == 0)
+			break;
 
 		printf("please enter: ");
 		fflush(stdout);
@@ -21,7 +21,9 @@ int main()
 		{
 			buf[s-1] = 0;
 			SendMsg(msg_id,SERVER_TYPE,buf);
-			printf("send success,waiting..\n");
+			if(strcasecmp("quit",buf) == 0)
+				break;
+			printf("please waiting..\n");
 		}
 	}
 
