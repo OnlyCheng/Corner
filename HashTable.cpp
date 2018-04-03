@@ -1,7 +1,12 @@
+#pragma once
 #include <iostream>
 using namespace std;
 
-//闭散列
+//完成闭散列要求：
+//>> 插入元素唯一
+//>> 写成动态的考虑如何增容？
+//>> 哈希函数用出留余数法，考虑余数每次模素数 增容尽量增加到原空间的两倍
+//>> 哈希表中任意类型都可以存储
 
 //近似于二倍增长的素数表
 const int _PrimeSize = 28;
@@ -16,12 +21,7 @@ static const unsigned long _PrimeList[_PrimeSize] =
 };
 
 //用于标记哈希表元素的状态
-enum State
-{
-	EMPTY,
-	FILLED,
-	DELETED
-};
+enum State{EMPTY,FILLED,DELETED};
 
 //哈希表元素结点
 template<class K>
@@ -84,6 +84,10 @@ public:
 
 	bool Insert(const K& key)
 	{
+		if (Find(key) > 0)//已经存在
+			return false;
+
+		CheckCapacity();
 		return _Insert(key);
 	}
 
@@ -158,14 +162,17 @@ public:
 private:
 	bool _Insert(const K& key)
 	{
-		if (Find(key) > 0)//已经存在
-			return false;
-
-		CheckCapacity();
 		size_t hashNo = HashFunc(key);
-
 		if (_hashTable[hashNo]._state != EMPTY)
-			LineCheck(hashNo);
+		{
+			if (IsLine)
+				LineCheck(hashNo);
+			else
+			{
+				int i = 0;
+				SecondCheck(hashNo, i);
+			}
+		}
 
 		_hashTable[hashNo]._key = key;
 		_hashTable[hashNo]._state = FILLED;
@@ -194,7 +201,7 @@ private:
 	// 二次探测 
 	void SecondCheck(size_t hashAddr, size_t i)
 	{
-		while (_hashTable[hashAddr]._state != EMPITY)
+		while (_hashTable[hashAddr]._state != EMPTY)
 		{
 			hashAddr = (hashAddr + i ^ 2) % _capacity;
 			i++;
@@ -212,38 +219,31 @@ private:
 		return _PrimeList[i];
 	}
 
+	void Swap(HashTable& ht)
+	{
+		if (&ht != this)
+		{
+			swap(ht._hashTable, _hashTable);
+			swap(ht._capacity, _capacity);
+			swap(ht._size, _size);
+		}
+	}
+
 	void CheckCapacity()
 	{
 		if (_size * 10 / _capacity < 7)
 			return;
 
 		size_t newCapacity = FindNextPrime(_capacity);
-		Elem* newElem = new Elem[newCapacity];
+		HashTable ht(newCapacity);
 
 		//将旧空间的元素以插入的方式搬移到新空间
 		for (size_t i = 0; i < _capacity; i++)
 		{
 			if (_hashTable[i]._state == FILLED)
-			{
-				size_t addr = HashFunc(_hashTable[i]._key);
-				if (newElem[addr]._state != EMPTY)
-					LineCheck(addr);
-
-				newElem[addr]._key = _hashTable[i]._key;
-			}
+				ht.Insert(_hashTable[i]._key);
 		}
-		_capacity = newCapacity;
-		swap(_hashTable, newElem);
-	}
-
-	void Swap(HashTable& ht)
-	{
-		if (&ht != this)
-		{
-			swap(ht->_hashTable, _hashTable);
-			swap(ht->_capacity, _capacity);
-			swap(ht->_size, _size);
-		}
+		Swap(ht);
 	}
 
 private:
@@ -274,7 +274,7 @@ void TestHashTable1()
 
 void TestHashTable2()
 {
-	HashTable<string> ht;
+	HashTable<string,false> ht;
 
 	ht.Insert("abcde");
 	ht.Insert("asdfg");
@@ -286,7 +286,7 @@ void TestHashTable2()
 	ht.Insert("fiskwewjf");
 	ht.Insert("rueif");
 
-	int addr = ht.Find("abcde");
+	int addr = ht.Find("erion");
 	cout << "capacity is: " << ht.Capacity() << endl;
 	cout << "size is: " << ht.Size() << endl;
 	cout << "abcde's addr is: " << addr << endl;
