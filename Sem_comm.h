@@ -16,7 +16,7 @@ union semun
 	struct semid_ds* buf;
 	unsigned short* array;
 	struct seminfo* _buf;
-}
+};
 
 #define ERR_EXIT(n) \
 	do\
