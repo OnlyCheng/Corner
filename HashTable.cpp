@@ -2,12 +2,6 @@
 #include <iostream>
 using namespace std;
 
-//完成闭散列要求：
-//>> 插入元素唯一
-//>> 写成动态的考虑如何增容？
-//>> 哈希函数用出留余数法，考虑余数每次模素数 增容尽量增加到原空间的两倍
-//>> 哈希表中任意类型都可以存储
-
 //近似于二倍增长的素数表
 const int _PrimeSize = 28;
 static const unsigned long _PrimeList[_PrimeSize] =
