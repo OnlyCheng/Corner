@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <string.h>
 
 #define ERR_EXIT(n) \
 	do\
@@ -65,6 +66,19 @@ void MyDaemon()
 	dup2(fd0,0);
 	dup2(fd0,1);
 	dup2(fd0,2);
+
+	//已成功创建一个守护进程，为了方便验证，让守护进程为我们提供一项服务
+	while(1)
+	{
+		fd0 = open("daemon.txt", O_WRONLY|O_CREAT|O_APPEND, 0644);
+		if(fd0 == -1)
+			ERR_EXIT("open");
+		char *buf = "I'm offering you a service\n";
+		write(fd0, buf, strlen(buf));
+		close(fd0);
+		sleep(60);
+	
+	}
 }
 
 int main()
