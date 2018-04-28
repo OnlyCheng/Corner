@@ -82,9 +82,8 @@ private:
 
 void testmutrix()
 {
-	char buf[] = {A,B,C,D,E};
+	char buf[] = {'A','B','C','D','E'};
 	Graph<char,int> g(buf,sizeof(buf)/sizeof(buf[0]));
-	g.AddEdge('A','D',10);
 	g.AddEdge('A','B',25);
 	g.AddEdge('B','E',20);
 	g.AddEdge('C','D',10);
