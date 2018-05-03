@@ -1,0 +1,34 @@
+class Solution
+{
+public:
+    void push(int node) {
+        stack1.push(node);
+    }
+
+    int pop() {
+        int temp = 0;
+        int ret = 0;
+        while(!stack1.empty())
+        {
+            temp = stack1.top();
+            stack1.pop();
+            stack2.push(temp);
+        }
+        if(!stack2.empty())
+        {
+            ret = stack2.top();
+            stack2.pop();
+        }
+        while(!stack2.empty())
+        {
+            temp = stack2.top();
+            stack2.pop();
+            stack1.push(temp);
+        }
+        return ret;
+    }
+
+private:
+    stack<int> stack1;
+    stack<int> stack2;
+};
