@@ -1,7 +1,10 @@
+#pragma once
 #include <iostream>
 using namespace std;
 #include <vector>
+#include <stack>
 #include <assert.h>
+#include <queue>
 
 template<class V>
 struct Edge
@@ -99,7 +102,89 @@ public:
 		}
 	}
 
+	void BFS(const V & v)
+	{
+		int index = GetIndexOfV(v);
+		if(index < 0)
+			return;
+		
+		vector<V> arr;
+		queue<V> q;
+		q.push(v);
+		while(!q.empty())
+		{
+			V temp = q.front();
+			q.pop();
+			if(Find(arr,temp) >= 0)
+				continue;
+			arr.push_back(temp);
+			index = GetIndexOfV(temp);
+			pEdge pCur = _edges[index];
+			while(pCur)
+			{
+				q.push(pCur->_dest);
+				pCur = pCur->_pNext;
+			}
+		}
+
+		for(int i = 0; i < _v.size();i++)
+		{
+			if(Find(arr,_v[i]) < 0)
+				arr.push_back(_v[i]);
+		}
+
+		for(int i = 0; i<arr.size(); i++)
+		{
+			cout<<arr[i]<<" ";
+		}
+		cout<<endl;
+	}
+
+	void DFS(const V& v)
+	{
+		int index = GetIndexOfV(v);
+		if(index < 0)
+			return;
+
+		vector<V> arr;
+		stack<V> s;
+		pEdge pCur = _edges[index];
+		s.push(v);
+
+		int size = _v.size();
+		int i = index;
+		do
+		{
+			while(!s.empty())
+			{
+				V temp = s.top();
+				s.pop();
+				if(Find(arr,temp) >= 0)//已经遍历过了
+					continue;
+				arr.push_back(temp);
+				pCur = _edges[i];
+				while(pCur)
+				{
+					s.push(pCur->dest);
+					pCur = pCur->_pNext;
+				}
+			}
+			i++;
+
+		}while(i<size);
+	}
+
 private:
+
+	int Find(vector<V> & arr,V data)
+	{
+		for(int i = 0; i<arr.size(); i++)
+		{
+			if(data == arr[i])
+				return i;
+		}
+		return -1;
+	}
 	int GetIndexOfV(const V & v)
 	{
 		int size = _v.size();
@@ -118,7 +203,7 @@ private:
 	vector<pEdge> _edges;
 };
 
-void TestListGraph()
+void TestList()
 {
 	char arr[] = { 'A', 'B', 'C', 'D', 'E', 'F' };
 	int size = sizeof(arr) / sizeof(arr[0]);
@@ -133,11 +218,6 @@ void TestListGraph()
 	int dev = g.GetDevOfV('A');
 	cout << "The dev of A is: " << dev << endl;
 	g.PrintGraph();
-}
-
-int main()
-{
-  TestListGraph();
-  return 0;
+	g.BFS('A');
 }
 	
