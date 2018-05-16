@@ -5,6 +5,8 @@ using namespace std;
 #include <stack>
 #include <assert.h>
 #include <queue>
+#include "UFS.hpp"
+#include <queue>
 
 template<class V>
 struct Edge
@@ -13,6 +15,15 @@ struct Edge
 	V _dest;
 	int _weight;
 	struct Edge* _pNext;
+};
+
+template <class V>
+struct Less
+{
+	bool operator() (const V& v1,const V& v2)
+	{
+		return v1->_weight < v2->_weight;
+	}
 };
 
 template<class V,bool IsDirect = false>
@@ -49,6 +60,7 @@ public:
 			Edge->_pNext = _edges[i1];
 			_edges[i2] = Edge;
 		}
+		return true;
 	}
 
 	int GetDevOfV(const V & v)
@@ -174,8 +186,43 @@ public:
 		}while(i<size);
 	}
 
-private:
+	vector<pEdge> Kruskal()
+	{
+		int size = _v.size();
+		V arr[size] = {0};
 
+		for(int i = 0; i<size; i++)
+			arr[i] = _v[i];
+
+		priority_queue <pEdge,vector<pEdge>,Less> > heap;
+		for(int i = 0; i<size; i++)
+		{
+			pEdge pCur = _edges[i];
+			while(pCur)
+			{
+				heap.push(pCur);
+				pCur = pCur->_pNext;
+			}
+		}
+
+		UFS<V> ufs(arr,size);
+		vector<pEdge> res;
+		
+		int count = 0;
+		while(res.size() < size-1 || !heap.empty())
+		{
+			pEdge min = heap.top();
+			heap.pop();
+			ufs.UnionSet(min->_src,min->_dest);
+			int root1 = ufs.Find(min->_src);
+			int root2 = ufs.Find(min->_dest);
+			if(root1 == root2)
+				continue;
+			res.push_back(min);
+		}
+
+	}
+private:
 	int Find(vector<V> & arr,V data)
 	{
 		for(int i = 0; i<arr.size(); i++)
@@ -219,5 +266,16 @@ void TestList()
 	cout << "The dev of A is: " << dev << endl;
 	g.PrintGraph();
 	g.BFS('A');
+	typedef Edge* pEdge;
+
+	vector<pEdge> ret = g.Kruskal();
+	size = ret.size();
+	cout<< "kruskal"<<endl;
+	for(int i = 0;i<size; i++)
+	{
+		cout<< "<"<<ret[i]->_src<<","<<ret[i]->_dest<<">"<<"  ";
+	}
+	count<<endl;
 }
+
 	
