@@ -1,4 +1,4 @@
-//有缺陷的方法
+//借助一个辅助栈来实现
 class Solution {
 public:
     bool IsPopOrder(vector<int> pushV,vector<int> popV) {
@@ -7,33 +7,34 @@ public:
         if(size1 != size2)
             return false;
         
-        int max = GetSeqOfPush(pushV,popV[0]);
-        int flag = 0;
-        for(int i = 1; i<size2; i++)
+        stack<int> s;//辅助栈
+        int index = 0;
+        int i = 0;
+        for(; i<size2; i++)
         {
-            int seq0 = GetSeqOfPush(pushV,popV[i-1]);
-            int seq = GetSeqOfPush(pushV,popV[i]);
-            if(seq0<0 || seq < 0)
-                return false;
-            if(seq > max)
+            //如果在辅助栈中还没有当前的数字，先将当前数字以及前边还没有压过的都压入辅助栈中
+            while(index <= GetIndex(pushV,popV[i]))
+                s.push(pushV[index++]);
+            //栈顶元素与当前元素对比，相同则表示可以取到当前数字，直接将当前数字出栈，循环继续
+            if(!s.empty() && s.top() == popV[i])
             {
-                max = seq;
-                flag = i;
+                s.pop();
+                continue;
             }
-            if(seq0 < seq && i>flag)
-                return false;
+            //说明当前想要出栈的元素已经压入到辅助栈了且不在栈顶，那么，当前序列肯定不满足条件
+            break;
         }
-        return true;
-        
+        if(i == size2)
+            return true;
+        return false;
     }
-    int GetSeqOfPush(vector<int> pushV,int num)
+    
+    int GetIndex(vector<int> pushV,int num)
     {
         int size = pushV.size();
         for(int i = 0; i<size; i++)
-        {
-            if(num == pushV[i])
+            if(pushV[i] == num)
                 return i;
-        }
         return -1;
     }
 };
