@@ -43,3 +43,44 @@ int main()
     
     return 0;
 }
+
+//方法2
+#include <iostream>
+using namespace std;
+
+void Reverse(char* str, int left, int right)
+{
+    if (NULL == str || left >= right)
+        return;
+    while (left < right)
+    {
+        char tmp = str[left];
+        str[left] = str[right];
+        str[right] = tmp;
+        left++; right--;
+    }
+}
+
+int main()
+{
+    char str[100];
+    gets(str);
+    int len = 0;
+    int l = 0;
+    
+    for (int i = 0; str[i] != '\0'; i++)
+        len++;
+    int r = len - 1;
+    Reverse(str, l, r);
+    for (int i = 0; i<len+1; i++)
+    {
+        if ((str[i] == ' ' || str[i] == '\0') && i-l > 1)
+        {
+            r = i - 1;
+            Reverse(str, l, r);
+            l = i + 1;
+        }
+    }
+    cout << str << endl;
+    return 0;
+}
