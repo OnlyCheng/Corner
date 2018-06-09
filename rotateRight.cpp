@@ -14,14 +14,25 @@ public:
         ListNode* first = head;
         ListNode* second = head;
         
+        int n = 0;
+        while(first)
+        {
+            ++n;
+            first = first->next;
+        }
+        
+        if(k > n)
+            k %= n;
+        else if(k == n)
+            return head;
+        
+        first = head;
         while(first->next)
         {
             first = first->next;
             if(--k < 0)
                 second = second->next;
         }
-        if(k>=0)
-            return NULL;
         first->next = head;
         head = second->next;
         second->next = NULL;
