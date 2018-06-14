@@ -1,0 +1,76 @@
+#include <iostream>
+using namespace std;
+#include <vector>
+#include <string>
+#include <map>
+#include <cstdlib>
+
+struct Location{
+	int x;
+	int y;
+	Location()
+		: x(0)
+		, y(0)
+	{}
+};
+
+void CountPrint(vector<string>& v)
+{
+	int size = v.size();
+	if (size < 1)
+		return;
+	map<char, int> map1;
+	for (char i = 'A'; i <= 'Z'; ++i)
+	{
+		if (i < 'S')
+		{
+			map1[i] = (i - 'A' + 3) / 3;
+		}
+		else if (i >= 'S' && i < 'Z')
+		{
+			map1[i] = (i - 'A' + 2) / 3;
+		}
+		else
+		{
+			map1[i] = (i - 'A') / 3;
+		}
+	}
+	map<char, Location> map2;
+	for (char i = 'A'; i <= 'Z'; ++i)
+	{
+		map2[i].x = map1[i] / 3;
+		map2[i].y = map1[i] % 3;
+	}
+	for (int i = 0; i < size; ++i)
+	{
+		map2['0'].x = 0;
+		map2['0'].y = 0;
+		int count = 0;
+		int len = v[i].size();
+		if (len < 1)
+			cout << 0 << endl;
+		for (int j = 0; j < len; ++j)
+		{
+			if (v[i][j] < 'A' || v[i][j] > 'Z')
+				return;
+			count += abs(map2[v[i][j]].x - map2['0'].x) + abs(map2[v[i][j]].y - map2['0'].y);
+			map2['0'].x = map2[v[i][j]].x;
+			map2['0'].y = map2[v[i][j]].y;
+		}
+		cout << count << endl;
+	}
+}
+
+int main()
+{
+	int T = 0;
+	cin >> T;
+	if (T > 10 || T < 1)
+		return 1;
+	vector<string> v(T);
+	for (int i = 0; i < T; i++)
+		cin >> v[i];
+	CountPrint(v);
+
+	return 0;
+}
