@@ -1,0 +1,36 @@
+class SetOfStacks {
+public:
+    vector<vector<int> > setOfStacks(vector<vector<int> > ope, int size) { 
+        vector<vector<int> > result;
+        int n = ope.size();
+        if(size <= 0 || n == 0)
+            return result;
+        
+        result.resize(1);
+        result[0].resize(size);
+        int index = 0;
+        for(int i = 0; i<n; i++)
+        {
+            switch(ope[i][0])
+            {
+                case 1:
+                    if(result[index].size() == size)
+                    {
+                        result.resize(index+2);
+                        index++;
+                    }
+                    result[index].push_back(ope[i][1]);
+                    break;
+                case 2:
+                    if(index >= 0 && result[index].size() == 0)
+                        index--;
+                    if(index >= 0 && result[index].size() > 0)
+                        result[index].pop_back();
+                    break;
+                default:
+                    break;
+            }
+        }
+        return result;
+    }
+};
