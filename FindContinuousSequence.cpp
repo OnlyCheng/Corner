@@ -1,32 +1,27 @@
 class Solution {
 public:
     vector<vector<int> > FindContinuousSequence(int sum) {
-        vector<vector<int> >  res;
-        if(sum == 0)
+        vector<vector<int> > res;
+        if(sum <= 0)
             return res;
         
-        int size = sum>>1;
+        int max = sum/2 + 1;
         int s = 0;
-        int count = 0;
-        for(int i = 0; i<size; i++)
+        for(int i = 1; i<max; i++)
         {
             s = 0;
-            int j = 0; 
-            for(int j = i; j<=size; j++)
+            vector<int> temp;
+            for(int j = i; j<=max; j++)
             {
+                temp.push_back(j);
                 s += j;
-                if(s >= sum)
+                if(s == sum)
+                {
+                    res.push_back(temp);
                     break;
-            }
-            int k = j-i+1;
-            if(s == sum)
-            {
-                count++;
-                res.resize(count);
-                res[count-1].resize(k);
-                int index = 0;
-                for(int m = i; m<= j; m++)
-                    res[count-1][index++] = m;
+                }
+                else if(s > sum)
+                    break;
             }
         }
         return res;
