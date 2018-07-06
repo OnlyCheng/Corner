@@ -13,7 +13,7 @@
 #include <pthread.h>
 
 #define MAX 1024
-#define HOME_PAGE "homepage.html"
+#define HOME_PAGE "home.html"
 int StartUp(int port)
 {
 	int sock = socket(AF_INET,SOCK_STREAM,0);
