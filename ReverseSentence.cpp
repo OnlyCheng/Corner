@@ -1,4 +1,4 @@
-//方法一
+//方法一  在原串末尾加上一个空格，处理完再去掉
 class Solution {
 public:
     string ReverseSentence(string str) {
@@ -32,7 +32,8 @@ public:
     }
 };
 
-//方法二
+
+//方法二，借助库函数
 class Solution {
 public:
     string ReverseSentence(string str) {
