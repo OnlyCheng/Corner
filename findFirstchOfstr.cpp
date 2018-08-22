@@ -27,3 +27,29 @@ int main()
     }
     return 0;
 }
+
+
+//方法2
+#include <iostream>
+using namespace std;
+#include <string>
+
+int main()
+{
+    string str;
+    while(getline(cin,str))
+    {
+        int size = str.size();
+        int i = 0;
+        for(;i<size;i++)
+        {
+            if(str.find(str[i]) == str.rfind(str[i]))
+                break;
+        }
+        if(i != size)
+            cout<<str[i]<<endl;
+        else
+            cout<<-1<<endl;
+    }
+    return 0;
+}
