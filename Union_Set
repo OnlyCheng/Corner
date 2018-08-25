@@ -1,0 +1,71 @@
+#include<vector>
+#include<iostream>
+using namespace std;
+
+class UFS
+{
+public:
+	UFS(size_t size)
+	{
+		set.resize(size, -1);
+	}
+	int Find(const int x)
+	{
+		if (set[x] < 0)
+		{
+			return x;
+		}
+		else
+		{
+			int index = x;
+			while (set[index] >= 0)
+			{
+				index = set[index];
+			}
+			return index;
+		}
+	}
+	bool Union(const int x1, const int x2)
+	{
+		int root1 = Find(x1);
+		int root2 = Find(x2);
+		if (root1 != root2)
+		{
+			set[root1] = set[root2];
+			set[root2] = root1;
+			return true;
+		}
+		return false;
+	}
+	size_t elementcount()
+	{
+		size_t count = 0;
+		vector<int>::iterator t1 = set.begin();
+		for (; t1 != set.end(); ++t1)
+		{
+			if (*t1 < 0)
+				++count;
+		}
+		return count;
+	}
+private:
+	vector<int> set;
+};
+
+int main()
+{
+	int n;
+	cin >> n;
+	UFS uf(n);
+	for (int i = 0; i < n; ++i)
+	{
+		int temp;
+		do
+		{
+			cin >> temp;
+			if (temp)
+				uf.Union(i, temp - 1);
+		} while (temp);
+	}
+	cout << uf.elementcount() << endl;
+}
